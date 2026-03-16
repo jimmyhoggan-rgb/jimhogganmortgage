@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Utah Mortgage Calculator | Jim Hoggan Mortgage | NMLS #284263</title>
+<title>Utah Mortgage Calculators | Jim Hoggan Mortgage | NMLS #284263</title>
 <meta name="description" content="Free Utah mortgage calculators — monthly payment, home affordability, and refinance break-even. Get instant estimates from Jim Hoggan, 30-year Utah mortgage expert. NMLS #284263.">
 <meta name="author" content="Jim Hoggan, NMLS #284263">
 <meta name="robots" content="index, follow">
@@ -91,8 +91,8 @@
 
   /* CALCULATOR PANELS */
   .calc-section { padding: 60px 5% 100px; max-width: 900px; margin: 0 auto; }
-  .calc-panel { display: none; }
-  .calc-panel.active { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .calc-panel { display: none; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
+  .calc-panel.active { display: grid; }
 
   /* INPUTS */
   .calc-inputs { background: var(--navy-mid); border: 1px solid rgba(201,168,76,0.15); border-radius: 4px; padding: 36px; }
@@ -201,7 +201,7 @@
 <div class="calc-section">
 
   <!-- PAYMENT CALCULATOR -->
-  <div class="calc-panel active" id="calc-payment">
+  <div class="calc-panel active" id="calc-payment" style="display:grid;">
     <div class="calc-inputs">
       <h2>Monthly Payment</h2>
       <div class="input-group">
@@ -386,10 +386,19 @@
 
 <script>
   function showCalc(id, btn) {
-    document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.calc-tab').forEach(t => t.classList.remove('active'));
-    document.getElementById('calc-' + id).classList.add('active');
+    var panels = document.getElementsByClassName('calc-panel');
+    for (var i = 0; i < panels.length; i++) {
+      panels[i].style.display = 'none';
+    }
+    var tabs = document.getElementsByClassName('calc-tab');
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].classList.remove('active');
+    }
+    document.getElementById('calc-' + id).style.display = 'grid';
     btn.classList.add('active');
+    if (id === 'payment') calcPayment();
+    if (id === 'affordability') calcAffordability();
+    if (id === 'refinance') calcRefinance();
   }
 
   function fmt(n) {
