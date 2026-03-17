@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utah Mortgage Calculators | Jim Hoggan Mortgage | NMLS #284263</title>
+<meta name="description" content="Free Utah mortgage calculators — monthly payment, home affordability, and refinance break-even. Jim Hoggan, NMLS #284263.">
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://www.jimhogganmortgage.com/calculator.html">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0d1b2a;--navy-mid:#1b2e45;--gold:#c9a84c;--gold-light:#e8c97a;--white:#ffffff;}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden;}
+nav{position:fixed;top:0;width:100%;z-index:100;background:rgba(13,27,42,0.97);backdrop-filter:blur(12px);border-bottom:1px solid rgba(201,168,76,0.2);padding:18px 5%;display:flex;align-items:center;justify-content:space-between;}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.4rem;font-weight:700;color:var(--gold);letter-spacing:0.02em;text-decoration:none;}
+.nav-logo span{color:var(--white);font-weight:400;}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+.nav-links a{color:rgba(255,255,255,0.75);text-decoration:none;font-size:0.85rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;}
+.nav-links a:hover{color:var(--gold);}
+.nav-cta{background:var(--gold);color:var(--navy)!important;padding:10px 22px;border-radius:2px;font-weight:600!important;}
+.page-hero{padding:140px 5% 40px;text-align:center;position:relative;}
+.page-hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(201,168,76,0.08) 0%,transparent 70%);pointer-events:none;}
+.eyebrow{display:inline-flex;align-items:center;gap:12px;font-size:0.78rem;font-weight:500;color:var(--gold);letter-spacing:0.18em;text-transform:uppercase;margin-bottom:20px;}
+.eyebrow::before,.eyebrow::after{content:'';display:block;width:30px;height:1px;background:var(--gold);}
+.page-hero h1{font-family:'Playfair Display',serif;font-size:clamp(2.2rem,4vw,3.5rem);font-weight:900;line-height:1.1;margin-bottom:16px;}
+.page-hero h1 em{font-style:normal;color:var(--gold);}
+.page-hero p{font-size:1rem;color:rgba(255,255,255,0.6);max-width:560px;margin:0 auto 12px;line-height:1.7;}
+.disc-note{font-size:0.78rem;color:rgba(255,255,255,0.35);max-width:600px;margin:0 auto;}
+.tab-bar{display:flex;justify-content:center;max-width:720px;margin:40px auto 0;border:1px solid rgba(201,168,76,0.2);border-radius:3px;overflow:hidden;position:relative;z-index:10;}
+.tbtn{flex:1;padding:14px 10px;background:transparent;border:none;border-right:1px solid rgba(201,168,76,0.2);color:rgba(255,255,255,0.5);font-family:'DM Sans',sans-serif;font-size:0.8rem;font-weight:500;letter-spacing:0.06em;text-transform:uppercase;cursor:pointer;}
+.tbtn:last-child{border-right:none;}
+.tbtn:hover{color:var(--gold);background:rgba(201,168,76,0.06);}
+.tbtn.on{background:var(--gold);color:var(--navy);font-weight:700;}
+.wrap{padding:50px 5% 60px;max-width:960px;margin:0 auto;}
+.panel{display:none;grid-template-columns:1fr 1fr;gap:40px;align-items:start;}
+.ibox{background:var(--navy-mid);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:36px;}
+.ibox h2{font-family:'Playfair Display',serif;font-size:1.4rem;margin-bottom:28px;}
+.fld{margin-bottom:20px;}
+.fld label{display:block;font-size:0.75rem;font-weight:500;color:rgba(255,255,255,0.45);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:7px;}
+.fw{position:relative;}
+.pre{position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--gold);font-weight:600;}
+.suf{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--gold);font-weight:600;}
+.fw input{width:100%;background:rgba(255,255,255,0.05);border:1px solid rgba(201,168,76,0.2);border-radius:3px;padding:12px 13px 12px 32px;color:var(--white);font-family:'DM Sans',sans-serif;font-size:1rem;-moz-appearance:textfield;}
+.fw input::-webkit-outer-spin-button,.fw input::-webkit-inner-spin-button{-webkit-appearance:none;}
+.fw input:focus{outline:none;border-color:var(--gold);}
+.np input{padding-left:13px;}
+.gbtn{width:100%;margin-top:6px;background:var(--gold);color:var(--navy);border:none;border-radius:2px;padding:15px;font-family:'DM Sans',sans-serif;font-size:0.85rem;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;cursor:pointer;}
+.gbtn:hover{background:var(--gold-light);}
+.rcol{display:flex;flex-direction:column;gap:16px;}
+.rcard{background:var(--navy-mid);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:28px;}
+.rcard.hi{border-color:rgba(201,168,76,0.4);background:rgba(201,168,76,0.08);}
+.rlbl{font-size:0.72rem;font-weight:500;color:rgba(255,255,255,0.45);letter-spacing:0.12em;text-transform:uppercase;margin-bottom:8px;}
+.rval{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--gold);line-height:1;}
+.rsub{font-size:0.8rem;color:rgba(255,255,255,0.4);margin-top:6px;}
+.bk{margin-top:18px;padding-top:18px;border-top:1px solid rgba(255,255,255,0.08);}
+.br{display:flex;justify-content:space-between;font-size:0.85rem;color:rgba(255,255,255,0.6);padding:4px 0;}
+.br span:last-child{color:var(--white);font-weight:500;}
+.ctab{background:rgba(201,168,76,0.08);border:1px solid rgba(201,168,76,0.25);border-radius:4px;padding:24px;text-align:center;}
+.ctab p{font-size:0.88rem;color:rgba(255,255,255,0.6);line-height:1.6;margin-bottom:14px;}
+.ctab a{display:block;background:var(--gold);color:var(--navy);text-decoration:none;padding:12px;border-radius:2px;font-size:0.82rem;font-weight:700;letter-spacing:0.06em;text-transform:uppercase;}
+.ctab a:hover{background:var(--gold-light);}
+.ncard{background:rgba(201,168,76,0.05);border:1px solid rgba(201,168,76,0.15);border-radius:4px;padding:24px;font-size:0.85rem;color:rgba(255,255,255,0.6);line-height:1.7;}
+.disc{max-width:960px;margin:0 auto;padding:30px 5% 60px;font-size:0.75rem;color:rgba(255,255,255,0.3);line-height:1.8;border-top:1px solid rgba(255,255,255,0.06);}
+footer{border-top:1px solid rgba(255,255,255,0.08);padding:28px 5%;font-size:0.72rem;color:rgba(255,255,255,0.25);line-height:1.8;text-align:center;}
+footer a{color:rgba(255,255,255,0.35);text-decoration:none;}
+footer a:hover{color:var(--gold);}
+@media(max-width:768px){.panel{grid-template-columns:1fr!important;}.tab-bar{flex-direction:column;}.tbtn{border-right:none;border-bottom:1px solid rgba(201,168,76,0.2);}.tbtn:last-child{border-bottom:none;}.nav-links{display:none;}}
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="nav-logo">Jim <span>Hoggan</span></a>
+  <ul class="nav-links">
+    <li><a href="/#programs">Loan Programs</a></li>
+    <li><a href="/#about">About</a></li>
+    <li><a href="/#locations">Service Areas</a></li>
+    <li><a href="/#blog">Resources</a></li>
+    <li><a href="/#contact" class="nav-cta">Get Pre-Approved</a></li>
+  </ul>
+</nav>
+
+<div class="page-hero">
+  <div class="eyebrow">Free Tools</div>
+  <h1>Utah Mortgage <em>Calculators</em></h1>
+  <p>Instant estimates to help you plan your Utah home purchase, understand your buying power, or evaluate a refinance.</p>
+  <div class="disc-note">Estimates only. Actual rates and payments depend on your credit profile and current market conditions.</div>
+  <div class="tab-bar">
+    <button class="tbtn on" id="tbtn-p" onclick="go('p')">Monthly Payment</button>
+    <button class="tbtn" id="tbtn-a" onclick="go('a')">Affordability</button>
+    <button class="tbtn" id="tbtn-r" onclick="go('r')">Refinance Break-Even</button>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <!-- PAYMENT PANEL -->
+  <div class="panel" id="pnl-p" style="display:grid;">
+    <div class="ibox">
+      <h2>Monthly Payment</h2>
+      <div class="fld"><label>Home Price</label><div class="fw"><span class="pre">$</span><input type="number" id="p1" value="450000"></div></div>
+      <div class="fld"><label>Down Payment</label><div class="fw"><span class="pre">$</span><input type="number" id="p2" value="90000"></div></div>
+      <div class="fld"><label>Interest Rate</label><div class="fw np"><span class="suf">%</span><input type="number" id="p3" value="6.75" step="0.125"></div></div>
+      <div class="fld"><label>Loan Term (Years)</label><div class="fw np"><span class="suf">yrs</span><input type="number" id="p4" value="30"></div></div>
+      <div class="fld"><label>Annual Property Tax</label><div class="fw"><span class="pre">$</span><input type="number" id="p5" value="3000"></div></div>
+      <div class="fld"><label>Annual Home Insurance</label><div class="fw"><span class="pre">$</span><input type="number" id="p6" value="1200"></div></div>
+      <button class="gbtn" onclick="calcP()">Calculate Payment</button>
+    </div>
+    <div class="rcol">
+      <div class="rcard hi"><div class="rlbl">Total Monthly Payment (PITI)</div><div class="rval" id="o-pt">—</div><div class="rsub">Principal, interest, taxes &amp; insurance</div><div class="bk"><div class="br"><span>Principal &amp; Interest</span><span id="o-ppi">—</span></div><div class="br"><span>Property Tax</span><span id="o-ptx">—</span></div><div class="br"><span>Home Insurance</span><span id="o-pins">—</span></div><div class="br"><span>PMI (est.)</span><span id="o-ppmi">—</span></div></div></div>
+      <div class="rcard"><div class="rlbl">Loan Summary</div><div class="br"><span>Loan Amount</span><span id="o-ploan">—</span></div><div class="br"><span>Down Payment %</span><span id="o-pdp">—</span></div><div class="br"><span>Total Interest Paid</span><span id="o-pint">—</span></div><div class="br"><span>Total Cost</span><span id="o-pcost">—</span></div></div>
+      <div class="ctab"><p>Get your actual rate and payment from Jim — takes 10 minutes.</p><a href="/#contact">Get My Actual Rate →</a></div>
+    </div>
+  </div>
+
+  <!-- AFFORDABILITY PANEL -->
+  <div class="panel" id="pnl-a">
+    <div class="ibox">
+      <h2>How Much Can I Afford?</h2>
+      <div class="fld"><label>Annual Household Income</label><div class="fw"><span class="pre">$</span><input type="number" id="a1" value="120000"></div></div>
+      <div class="fld"><label>Monthly Debt Payments</label><div class="fw"><span class="pre">$</span><input type="number" id="a2" value="500"></div></div>
+      <div class="fld"><label>Down Payment Available</label><div class="fw"><span class="pre">$</span><input type="number" id="a3" value="60000"></div></div>
+      <div class="fld"><label>Interest Rate</label><div class="fw np"><span class="suf">%</span><input type="number" id="a4" value="6.75" step="0.125"></div></div>
+      <div class="fld"><label>Loan Term (Years)</label><div class="fw np"><span class="suf">yrs</span><input type="number" id="a5" value="30"></div></div>
+      <div class="fld"><label>Max DTI %</label><div class="fw np"><span class="suf">%</span><input type="number" id="a6" value="43"></div></div>
+      <button class="gbtn" onclick="calcA()">Calculate Buying Power</button>
+    </div>
+    <div class="rcol">
+      <div class="rcard hi"><div class="rlbl">Estimated Max Home Price</div><div class="rval" id="o-ap">—</div><div class="rsub">Based on your income and DTI limit</div></div>
+      <div class="rcard"><div class="rlbl">Your Numbers</div><div class="br"><span>Monthly Income</span><span id="o-ai">—</span></div><div class="br"><span>Max Housing Payment</span><span id="o-amp">—</span></div><div class="br"><span>Available for P&amp;I</span><span id="o-api">—</span></div><div class="br"><span>Est. Loan Amount</span><span id="o-aln">—</span></div><div class="br"><span>Effective DTI</span><span id="o-adti">—</span></div></div>
+      <div class="ncard"><strong style="color:var(--gold);">Utah Context:</strong> Salt Lake City median is ~$500K–$550K. Utah County offers more value at $400K–$500K. Park City starts at $1M+.</div>
+      <div class="ctab"><p>Want to know exactly what you qualify for? A pre-approval takes 10 minutes.</p><a href="/#contact">Get Pre-Approved →</a></div>
+    </div>
+  </div>
+
+  <!-- REFINANCE PANEL -->
+  <div class="panel" id="pnl-r">
+    <div class="ibox">
+      <h2>Refinance Break-Even</h2>
+      <div class="fld"><label>Current Loan Balance</label><div class="fw"><span class="pre">$</span><input type="number" id="r1" value="380000"></div></div>
+      <div class="fld"><label>Current Interest Rate</label><div class="fw np"><span class="suf">%</span><input type="number" id="r2" value="7.25" step="0.125"></div></div>
+      <div class="fld"><label>New Interest Rate</label><div class="fw np"><span class="suf">%</span><input type="number" id="r3" value="6.25" step="0.125"></div></div>
+      <div class="fld"><label>Remaining Term (Years)</label><div class="fw np"><span class="suf">yrs</span><input type="number" id="r4" value="27"></div></div>
+      <div class="fld"><label>New Loan Term (Years)</label><div class="fw np"><span class="suf">yrs</span><input type="number" id="r5" value="30"></div></div>
+      <div class="fld"><label>Estimated Closing Costs</label><div class="fw"><span class="pre">$</span><input type="number" id="r6" value="6000"></div></div>
+      <button class="gbtn" onclick="calcR()">Calculate Break-Even</button>
+    </div>
+    <div class="rcol">
+      <div class="rcard hi"><div class="rlbl">Break-Even Point</div><div class="rval" id="o-rbe">—</div><div class="rsub" id="o-rbs">Stay longer than this to come out ahead</div></div>
+      <div class="rcard"><div class="rlbl">Your Savings</div><div class="br"><span>Current Monthly Payment</span><span id="o-rc">—</span></div><div class="br"><span>New Monthly Payment</span><span id="o-rn">—</span></div><div class="br"><span>Monthly Savings</span><span id="o-rm">—</span></div><div class="br"><span>Annual Savings</span><span id="o-ry">—</span></div><div class="br"><span>5-Year Net Savings</span><span id="o-r5">—</span></div></div>
+      <div class="ctab"><p>Want a free refinance analysis on your actual Utah mortgage? I'll tell you honestly if it makes sense.</p><a href="/#contact">Get a Free Refinance Analysis →</a></div>
+    </div>
+  </div>
+
+</div>
+
+<div class="disc">
+  <strong>Important Disclosures:</strong> These calculators are for informational purposes only and do not constitute a commitment to lend or financial advice. Results are estimates. All loans subject to credit approval, underwriting guidelines, and final investor approval. Rates and terms subject to change. Not all applicants will qualify. PMI estimated at 0.5% annually when down payment is less than 20%. Equal Housing Lender.<br><br>
+  Jim Hoggan – Mortgage Loan Originator, NMLS ID #284263 &nbsp;|&nbsp; Innovative Funding Utah LLC, NMLS ID #2682774 &nbsp;|&nbsp; Licensed in the State of Utah &nbsp;|&nbsp; <a href="https://www.nmlsconsumeraccess.org" target="_blank" rel="noopener" style="color:rgba(255,255,255,0.4);">Verify at NMLS Consumer Access</a>
+</div>
+
+<footer>
+  Jim Hoggan – Mortgage Loan Originator, NMLS ID #284263 &nbsp;·&nbsp; Sponsored by Innovative Funding Utah LLC, NMLS ID #2682774 &nbsp;·&nbsp; Licensed in the State of Utah<br>
+  Equal Housing Lender &nbsp;·&nbsp; This is not a commitment to lend. All loans subject to credit approval. Rates and terms may change without notice.<br><br>
+  &copy; 2025 Jim Hoggan Mortgage &nbsp;·&nbsp;
+  <a href="/privacy-policy.html">Privacy Policy</a> &nbsp;|&nbsp;
+  <a href="/terms-of-use.html">Terms of Use</a> &nbsp;|&nbsp;
+  <a href="/licensing-disclosure.html">Licensing Disclosure</a>
+</footer>
+
+<script>
+function go(tab) {
+  document.getElementById('pnl-p').style.display = 'none';
+  document.getElementById('pnl-a').style.display = 'none';
+  document.getElementById('pnl-r').style.display = 'none';
+  document.getElementById('tbtn-p').className = 'tbtn';
+  document.getElementById('tbtn-a').className = 'tbtn';
+  document.getElementById('tbtn-r').className = 'tbtn';
+  document.getElementById('pnl-' + tab).style.display = 'grid';
+  document.getElementById('tbtn-' + tab).className = 'tbtn on';
+  if (tab === 'p') calcP();
+  if (tab === 'a') calcA();
+  if (tab === 'r') calcR();
+}
+
+function m(n) { return '$' + Math.round(n).toLocaleString(); }
+
+function piCalc(loan, rate, yrs) {
+  if (rate === 0) return loan / (yrs * 12);
+  var r = rate / 100 / 12, n = yrs * 12;
+  return loan * (r * Math.pow(1+r,n)) / (Math.pow(1+r,n) - 1);
+}
+
+function calcP() {
+  var price = +document.getElementById('p1').value||0;
+  var down  = +document.getElementById('p2').value||0;
+  var rate  = +document.getElementById('p3').value||0;
+  var term  = +document.getElementById('p4').value||30;
+  var tax   = +document.getElementById('p5').value||0;
+  var ins   = +document.getElementById('p6').value||0;
+  var loan  = price - down;
+  var mpi   = piCalc(loan, rate, term);
+  var txmo  = tax/12, ismo = ins/12;
+  var dpct  = price > 0 ? down/price*100 : 0;
+  var pmi   = dpct < 20 ? loan*0.005/12 : 0;
+  var tot   = mpi + txmo + ismo + pmi;
+  document.getElementById('o-pt').textContent   = m(tot);
+  document.getElementById('o-ppi').textContent  = m(mpi);
+  document.getElementById('o-ptx').textContent  = m(txmo);
+  document.getElementById('o-pins').textContent = m(ismo);
+  document.getElementById('o-ppmi').textContent = pmi>0 ? m(pmi) : '$0';
+  document.getElementById('o-ploan').textContent = m(loan);
+  document.getElementById('o-pdp').textContent  = Math.round(dpct)+'%';
+  var tint = mpi*term*12 - loan;
+  document.getElementById('o-pint').textContent  = m(tint);
+  document.getElementById('o-pcost').textContent = m(loan+tint);
+}
+
+function calcA() {
+  var inc  = +document.getElementById('a1').value||0;
+  var debt = +document.getElementById('a2').value||0;
+  var dp   = +document.getElementById('a3').value||0;
+  var rate = +document.getElementById('a4').value||0;
+  var term = +document.getElementById('a5').value||30;
+  var dti  = +document.getElementById('a6').value||43;
+  var moInc = inc/12;
+  var maxPay = moInc*(dti/100);
+  var avail  = maxPay - debt - 350;
+  if (avail < 0) avail = 0;
+  var r = rate/100/12, n = term*12;
+  var ln = r>0 ? avail*(Math.pow(1+r,n)-1)/(r*Math.pow(1+r,n)) : avail*n;
+  var hp = ln + dp;
+  var eDTI = moInc>0 ? (avail+debt)/moInc*100 : 0;
+  document.getElementById('o-ap').textContent   = m(hp);
+  document.getElementById('o-ai').textContent   = m(moInc);
+  document.getElementById('o-amp').textContent  = m(maxPay);
+  document.getElementById('o-api').textContent  = m(avail);
+  document.getElementById('o-aln').textContent  = m(ln);
+  document.getElementById('o-adti').textContent = Math.round(eDTI)+'%';
+}
+
+function calcR() {
+  var bal  = +document.getElementById('r1').value||0;
+  var cr   = +document.getElementById('r2').value||0;
+  var nr   = +document.getElementById('r3').value||0;
+  var rem  = +document.getElementById('r4').value||30;
+  var nterm= +document.getElementById('r5').value||30;
+  var cc   = +document.getElementById('r6').value||0;
+  var cpi  = piCalc(bal,cr,rem);
+  var npi  = piCalc(bal,nr,nterm);
+  var sav  = cpi - npi;
+  var be   = sav>0 ? Math.ceil(cc/sav) : 0;
+  document.getElementById('o-rc').textContent  = m(cpi);
+  document.getElementById('o-rn').textContent  = m(npi);
+  document.getElementById('o-rm').textContent  = sav>0 ? m(sav) : '$0';
+  document.getElementById('o-ry').textContent  = sav>0 ? m(sav*12) : '$0';
+  document.getElementById('o-r5').textContent  = sav>0 ? m(sav*60-cc) : '$0';
+  if (sav<=0) {
+    document.getElementById('o-rbe').textContent = 'N/A';
+    document.getElementById('o-rbs').textContent = 'Refinancing would increase your payment';
+  } else {
+    document.getElementById('o-rbe').textContent = be+' months';
+    document.getElementById('o-rbs').textContent = 'Stay longer than '+be+' months to come out ahead';
+  }
+}
+
+calcP();
+</script>
+</body>
+</html>
