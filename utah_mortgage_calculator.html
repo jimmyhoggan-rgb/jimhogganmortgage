@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Utah Mortgage Calculator | Jim Hoggan | One Real Mortgage Corp.</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f8f7f4;color:#1a1a1a;min-height:100vh;padding:2rem 1rem}
+.wrapper{max-width:960px;margin:0 auto}
+.top-bar{display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;padding-bottom:1.25rem;border-bottom:1px solid #e5e3db}
+.logo-area h1{font-size:22px;font-weight:600;color:#1B3A6B;letter-spacing:-0.02em}
+.logo-area p{font-size:13px;color:#888;margin-top:2px}
+.nmls-badge{background:#1B3A6B;color:#C9A84C;font-size:11px;font-weight:600;padding:6px 12px;border-radius:6px;letter-spacing:0.03em}
+.disclaimer-bar{background:#FDF3D8;border:1px solid #e8c96a;border-radius:8px;padding:10px 14px;margin-bottom:1.25rem;font-size:12px;color:#7a5c0a;line-height:1.5}
+.disclaimer-bar strong{font-weight:600}
+.tabs{display:flex;gap:2px;margin-bottom:1.5rem;background:#eee;padding:4px;border-radius:10px}
+.tab{flex:1;padding:9px 8px;font-size:13px;font-weight:500;cursor:pointer;border:none;background:transparent;color:#777;border-radius:8px;transition:all 0.15s;text-align:center}
+.tab:hover{color:#1B3A6B}
+.tab.active{background:#fff;color:#1B3A6B;box-shadow:0 1px 4px rgba(0,0,0,0.12);font-weight:600}
+.panel{display:none}.panel.active{display:block}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+@media(max-width:640px){.grid2{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid #e8e6de;border-radius:12px;padding:1.25rem}
+.metric{background:#f4f2ed;border-radius:8px;padding:.875rem;text-align:center}
+.metric-label{font-size:11px;color:#888;margin-bottom:4px;text-transform:uppercase;letter-spacing:0.04em;font-weight:500}
+.metric-value{font-size:20px;font-weight:600;color:#1a1a1a}
+.metric-value.gold{color:#C9A84C}
+.metric-value.navy{color:#1B3A6B}
+.metric-value.green{color:#1a7a4a}
+.metric-value.amber{color:#b8760f}
+.metric-value.red{color:#c0392b}
+.field{margin-bottom:.875rem}
+.field label{display:block;font-size:12px;color:#666;margin-bottom:5px;font-weight:500}
+.field input,.field select{width:100%;padding:9px 11px;border:1px solid #ddd;border-radius:8px;font-size:14px;background:#fff;color:#1a1a1a;transition:border 0.15s;font-family:inherit}
+.field input:focus,.field select:focus{outline:none;border-color:#1B3A6B}
+.field-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.field-row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.section-title{font-size:11px;font-weight:600;color:#888;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:10px;margin-top:1.25rem}
+.section-title:first-child{margin-top:0}
+.divider{border:none;border-top:1px solid #ede9e0;margin:1.25rem 0}
+.pmt-breakdown{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.pmt-breakdown3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:10px}
+.buydown-table{width:100%;border-collapse:collapse;font-size:12px}
+.buydown-table th{font-size:11px;font-weight:600;color:#888;text-align:left;padding:6px 8px;border-bottom:1px solid #e8e6de;background:#f9f8f5}
+.buydown-table td{padding:8px;border-bottom:1px solid #f0ede6;color:#1a1a1a;vertical-align:top}
+.buydown-table tr:last-child td{border-bottom:none}
+.buydown-table .hl{background:#f4f2ed}
+.badge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;font-weight:600;vertical-align:middle;margin-left:4px}
+.badge-gold{background:#fdf3d8;color:#8b6914}
+.badge-navy{background:#e8edf5;color:#1B3A6B}
+.scenario-row{display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid #f0ede6}
+.scenario-row:last-child{border-bottom:none}
+.scenario-row.active-row{background:#f4f2ed;padding:8px 10px;border-radius:8px;border-bottom:none;margin-bottom:2px}
+.scenario-label{font-size:13px;color:#1a1a1a;font-weight:500}
+.scenario-val{font-size:14px;font-weight:600;color:#1a1a1a}
+.assumptions-box{background:#f9f8f5;border:1px solid #e8e6de;border-radius:8px;padding:.875rem;font-size:11px;color:#888;line-height:1.7;margin-top:12px}
+.assumptions-box strong{color:#666;font-weight:600}
+.footer{font-size:11px;color:#aaa;margin-top:1.5rem;padding-top:1rem;border-top:1px solid #ede9e0;line-height:1.7}
+.matrix-wrap{overflow-x:auto}
+</style>
+</head>
+<body>
+<div class="wrapper">
+
+<div class="top-bar">
+  <div class="logo-area">
+    <h1>Utah Mortgage Calculator</h1>
+    <p>Payment scenarios · Buydown analysis · Qualification tools</p>
+  </div>
+  <div class="nmls-badge">NMLS# 284263</div>
+</div>
+
+<div class="disclaimer-bar">
+  <strong>Important:</strong> All calculations are estimates only and are not a commitment to lend. Actual rates, payments, fees, and loan terms will vary based on credit history, loan type, property type, market conditions, and lender guidelines. Contact a licensed mortgage professional for an accurate loan estimate. Jim Hoggan | NMLS# 284263 | One Real Mortgage Corp. | Co. NMLS# 198414.
+</div>
+
+<div class="tabs">
+  <button class="tab active" onclick="switchTab('buyer',this)">Home Buyer</button>
+  <button class="tab" onclick="switchTab('agent',this)">Agent Tools</button>
+  <button class="tab" onclick="switchTab('lo',this)">LO Tools</button>
+  <button class="tab" onclick="switchTab('builder',this)">Builder Tools</button>
+</div>
+
+<!-- HOME BUYER -->
+<div id="tab-buyer" class="panel active">
+  <div class="grid2">
+    <div class="card">
+      <p class="section-title">Your home details</p>
+      <div class="field"><label>Home price</label><input type="number" id="c-price" value="400000" oninput="calcBuyer()"></div>
+      <div class="field-row">
+        <div class="field"><label>Down payment ($)</label><input type="number" id="c-down" value="20000" oninput="calcBuyer()"></div>
+        <div class="field"><label>Interest rate (%)</label><input type="number" id="c-rate" value="7.125" step="0.125" oninput="calcBuyer()"></div>
+      </div>
+      <div class="field"><label>Loan type</label>
+        <select id="c-type" onchange="calcBuyer()">
+          <option value="conv">Conventional</option>
+          <option value="fha">FHA</option>
+          <option value="va">VA</option>
+          <option value="usda">USDA</option>
+        </select>
+      </div>
+      <p class="section-title">Monthly costs</p>
+      <div class="field-row3">
+        <div class="field"><label>Property taxes</label><input type="number" id="c-tax" value="200" oninput="calcBuyer()"></div>
+        <div class="field"><label>Insurance</label><input type="number" id="c-ins" value="125" oninput="calcBuyer()"></div>
+        <div class="field"><label>HOA</label><input type="number" id="c-hoa" value="0" oninput="calcBuyer()"></div>
+      </div>
+      <p class="section-title">Income &amp; debts</p>
+      <div class="field-row">
+        <div class="field"><label>Annual income</label><input type="number" id="c-income" value="95000" oninput="calcBuyer()"></div>
+        <div class="field"><label>Monthly debts</label><input type="number" id="c-debts" value="500" oninput="calcBuyer()"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <p class="section-title">Estimated payment breakdown</p>
+        <div class="pmt-breakdown">
+          <div class="metric"><div class="metric-label">Loan amount</div><div class="metric-value navy" id="c-loan">--</div></div>
+          <div class="metric"><div class="metric-label">Est. principal &amp; interest</div><div class="metric-value navy" id="c-pi">--</div></div>
+          <div class="metric"><div class="metric-label">Taxes + insurance</div><div class="metric-value" id="c-ti">--</div></div>
+          <div class="metric"><div class="metric-label">Est. PMI / MIP</div><div class="metric-value" id="c-mip">--</div></div>
+          <div class="metric"><div class="metric-label">HOA</div><div class="metric-value" id="c-hoa-out">--</div></div>
+          <div class="metric"><div class="metric-label">Est. total monthly</div><div class="metric-value gold" id="c-total">--</div></div>
+        </div>
+        <div class="pmt-breakdown3">
+          <div class="metric"><div class="metric-label">Est. housing DTI</div><div class="metric-value" id="c-hdti">--</div></div>
+          <div class="metric"><div class="metric-label">Est. total DTI</div><div class="metric-value" id="c-tdti">--</div></div>
+          <div class="metric"><div class="metric-label">LTV</div><div class="metric-value" id="c-ltv">--</div></div>
+        </div>
+        <div class="metric"><div class="metric-label">Est. max purchase power at 45% DTI</div><div class="metric-value gold" id="c-maxpurchase">--</div></div>
+      </div>
+      <div class="card">
+        <p class="section-title">Est. payment at different rates</p>
+        <div id="c-scenarios"></div>
+        <div class="assumptions-box"><strong>Assumptions:</strong> PMI estimated at 0.85% annually for conventional loans with LTV above 80%. FHA MIP estimated at 0.55% annually. VA and USDA loans have no monthly MIP. Actual PMI/MIP rates vary by lender, credit score, and loan terms. DTI calculations use entered income and debts only — actual qualifying income may differ. All figures are estimates only and not a commitment to lend.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Jim Hoggan | NMLS# 284263 | One Real Mortgage Corp. | Co. NMLS# 198414 | (801) 244-4261 | james.hoggan@onerealmortgage.com<br>All calculations are estimates only and are not a commitment to lend. Actual loan terms, rates, and payments will vary. Equal Housing Opportunity.</div>
+</div>
+
+<!-- AGENT TOOLS -->
+<div id="tab-agent" class="panel">
+  <div class="grid2">
+    <div class="card">
+      <p class="section-title">Property details</p>
+      <div class="field"><label>Sales price</label><input type="number" id="r-price" value="480000" oninput="calcAgent()"></div>
+      <div class="field-row">
+        <div class="field"><label>Down payment ($)</label><input type="number" id="r-down" value="24000" oninput="calcAgent()"></div>
+        <div class="field"><label>Interest rate (%)</label><input type="number" id="r-rate" value="7.125" step="0.125" oninput="calcAgent()"></div>
+      </div>
+      <div class="field"><label>Loan type</label>
+        <select id="r-type" onchange="calcAgent()">
+          <option value="conv">Conventional</option>
+          <option value="fha">FHA</option>
+          <option value="va">VA</option>
+          <option value="usda">USDA</option>
+        </select>
+      </div>
+      <p class="section-title">Monthly costs</p>
+      <div class="field-row3">
+        <div class="field"><label>Property taxes</label><input type="number" id="r-tax" value="300" oninput="calcAgent()"></div>
+        <div class="field"><label>Insurance</label><input type="number" id="r-ins" value="150" oninput="calcAgent()"></div>
+        <div class="field"><label>HOA</label><input type="number" id="r-hoa" value="0" oninput="calcAgent()"></div>
+      </div>
+      <p class="section-title">Buyer info (optional)</p>
+      <div class="field-row">
+        <div class="field"><label>Annual income</label><input type="number" id="r-income" value="95000" oninput="calcAgent()"></div>
+        <div class="field"><label>Monthly debts</label><input type="number" id="r-debts" value="500" oninput="calcAgent()"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <p class="section-title">Estimated client payment</p>
+        <div class="pmt-breakdown">
+          <div class="metric"><div class="metric-label">Loan amount</div><div class="metric-value navy" id="r-loan">--</div></div>
+          <div class="metric"><div class="metric-label">Est. principal &amp; interest</div><div class="metric-value navy" id="r-pi">--</div></div>
+          <div class="metric"><div class="metric-label">Taxes + insurance</div><div class="metric-value" id="r-ti">--</div></div>
+          <div class="metric"><div class="metric-label">Est. PMI / MIP</div><div class="metric-value" id="r-mip">--</div></div>
+          <div class="metric"><div class="metric-label">HOA</div><div class="metric-value" id="r-hoa-out">--</div></div>
+          <div class="metric"><div class="metric-label">Est. total monthly</div><div class="metric-value gold" id="r-total">--</div></div>
+        </div>
+        <div class="pmt-breakdown3">
+          <div class="metric"><div class="metric-label">Est. total DTI</div><div class="metric-value" id="r-dti">--</div></div>
+          <div class="metric"><div class="metric-label">Down %</div><div class="metric-value" id="r-downpct">--</div></div>
+          <div class="metric"><div class="metric-label">Est. qualification</div><div class="metric-value" id="r-qual" style="font-size:13px">--</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="section-title">Est. payment at different price points</p>
+        <div id="r-scenarios"></div>
+        <div class="assumptions-box"><strong>Assumptions:</strong> Qualification estimate based on entered income and debts at 45% total DTI threshold only. Actual qualification depends on credit score, employment history, assets, loan type guidelines, and lender overlays. All figures are estimates only and are not a commitment to lend. Always refer clients to a licensed mortgage professional for an official loan estimate.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Jim Hoggan | NMLS# 284263 | One Real Mortgage Corp. | Co. NMLS# 198414 | (801) 244-4261 | james.hoggan@onerealmortgage.com<br>All calculations are estimates only and are not a commitment to lend. Actual loan terms, rates, and payments will vary. Equal Housing Opportunity.</div>
+</div>
+
+<!-- LO TOOLS -->
+<div id="tab-lo" class="panel">
+  <div class="grid2">
+    <div class="card">
+      <p class="section-title">Loan details</p>
+      <div class="field"><label>Loan amount</label><input type="number" id="l-loan" value="456000" oninput="calcLO()"></div>
+      <div class="field-row">
+        <div class="field"><label>Note rate (%)</label><input type="number" id="l-rate" value="7.125" step="0.125" oninput="calcLO()"></div>
+        <div class="field"><label>Term (years)</label>
+          <select id="l-term" onchange="calcLO()">
+            <option value="30">30 year</option>
+            <option value="20">20 year</option>
+            <option value="15">15 year</option>
+            <option value="10">10 year</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Loan type</label>
+        <select id="l-type" onchange="calcLO()">
+          <option value="conv">Conventional</option>
+          <option value="fha">FHA</option>
+          <option value="va">VA</option>
+          <option value="usda">USDA</option>
+        </select>
+      </div>
+      <p class="section-title">Monthly costs</p>
+      <div class="field-row3">
+        <div class="field"><label>Property taxes</label><input type="number" id="l-tax" value="300" oninput="calcLO()"></div>
+        <div class="field"><label>Insurance</label><input type="number" id="l-ins" value="150" oninput="calcLO()"></div>
+        <div class="field"><label>HOA</label><input type="number" id="l-hoa" value="0" oninput="calcLO()"></div>
+      </div>
+      <p class="section-title">Qualifying income &amp; debts</p>
+      <div class="field-row">
+        <div class="field"><label>Monthly income</label><input type="number" id="l-income" value="14215" oninput="calcLO()"></div>
+        <div class="field"><label>Monthly debts</label><input type="number" id="l-debts" value="1317" oninput="calcLO()"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <p class="section-title">Estimated loan analysis</p>
+        <div class="pmt-breakdown">
+          <div class="metric"><div class="metric-label">Est. P&amp;I</div><div class="metric-value navy" id="l-pi">--</div></div>
+          <div class="metric"><div class="metric-label">Est. total PITIA</div><div class="metric-value gold" id="l-total">--</div></div>
+          <div class="metric"><div class="metric-label">Est. housing DTI</div><div class="metric-value" id="l-hdti">--</div></div>
+          <div class="metric"><div class="metric-label">Est. total DTI</div><div class="metric-value" id="l-tdti">--</div></div>
+          <div class="metric"><div class="metric-label">Est. PMI / MIP</div><div class="metric-value" id="l-mip">--</div></div>
+          <div class="metric"><div class="metric-label">Est. max loan @ 45%</div><div class="metric-value gold" id="l-maxloan">--</div></div>
+        </div>
+      </div>
+      <div class="card">
+        <p class="section-title">Estimated rate scenario matrix</p>
+        <div class="matrix-wrap" id="l-matrix"></div>
+        <div class="assumptions-box"><strong>Assumptions:</strong> PMI estimated at 0.85% annually at 95% LTV for conventional loans. FHA MIP at 0.55% annually. Rate matrix shows estimated payment and DTI impact across rate scenarios using entered income and debt figures. Actual rates, PMI costs, and qualification will vary based on credit, lender, and market conditions. Not a commitment to lend.</div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Jim Hoggan | NMLS# 284263 | One Real Mortgage Corp. | Co. NMLS# 198414 | (801) 244-4261 | james.hoggan@onerealmortgage.com<br>All calculations are estimates only and are not a commitment to lend. Actual loan terms, rates, and payments will vary. Equal Housing Opportunity.</div>
+</div>
+
+<!-- BUILDER TOOLS -->
+<div id="tab-builder" class="panel">
+  <div class="grid2">
+    <div class="card">
+      <p class="section-title">Project details</p>
+      <div class="field-row">
+        <div class="field"><label>Sales price per home</label><input type="number" id="b-price" value="400000" oninput="calcBuilder()"></div>
+        <div class="field"><label>Number of homes</label><input type="number" id="b-homes" value="18" oninput="calcBuilder()"></div>
+      </div>
+      <div class="field-row">
+        <div class="field"><label>Down payment (%)</label><input type="number" id="b-down" value="5" step="0.5" oninput="calcBuilder()"></div>
+        <div class="field"><label>Market rate (%)</label><input type="number" id="b-rate" value="7.125" step="0.125" oninput="calcBuilder()"></div>
+      </div>
+      <div class="field"><label>Loan type</label>
+        <select id="b-type" onchange="calcBuilder()">
+          <option value="conv">Conventional</option>
+          <option value="fha">FHA</option>
+          <option value="va">VA</option>
+        </select>
+      </div>
+      <div class="field"><label>Permanent buydown target rate (%)</label><input type="number" id="b-target" value="5.125" step="0.125" oninput="calcBuilder()"></div>
+      <div class="field"><label>Permanent buydown cost (% of loan — from AE pricing)*</label><input type="number" id="b-permcost" value="3.0" step="0.125" oninput="calcBuilder()"></div>
+      <p class="section-title">Monthly costs per home</p>
+      <div class="field-row3">
+        <div class="field"><label>Property taxes</label><input type="number" id="b-tax" value="250" oninput="calcBuilder()"></div>
+        <div class="field"><label>Insurance</label><input type="number" id="b-ins" value="125" oninput="calcBuilder()"></div>
+        <div class="field"><label>HOA</label><input type="number" id="b-hoa" value="0" oninput="calcBuilder()"></div>
+      </div>
+    </div>
+    <div>
+      <div class="card" style="margin-bottom:16px">
+        <p class="section-title">Estimated project summary</p>
+        <div class="pmt-breakdown3" style="margin-bottom:16px">
+          <div class="metric"><div class="metric-label">Loan amount</div><div class="metric-value navy" id="b-loan">--</div></div>
+          <div class="metric"><div class="metric-label">Est. market payment</div><div class="metric-value" id="b-mktpmt">--</div></div>
+          <div class="metric"><div class="metric-label">Est. all homes / mo</div><div class="metric-value" id="b-mktall">--</div></div>
+        </div>
+        <div class="matrix-wrap">
+          <table class="buydown-table">
+            <thead>
+              <tr>
+                <th>Buydown option</th>
+                <th>Yr 1 rate</th>
+                <th>Est. yr 1 payment</th>
+                <th>Est. yr 1 savings</th>
+                <th>Est. cost / home</th>
+                <th>Est. all homes</th>
+              </tr>
+            </thead>
+            <tbody id="b-table"></tbody>
+          </table>
+        </div>
+      </div>
+      <div class="card">
+        <div class="assumptions-box">
+          <strong>Buydown cost assumptions:</strong><br>
+          Temporary buydown costs (2-1 and 1-0) are estimated as the total payment subsidy deposited into escrow — the difference between the market payment and the reduced payment for each buydown year. Actual costs may vary by lender.<br><br>
+          Permanent buydown cost is estimated as the present value of monthly payment savings over the loan term at the market rate. This is an approximation only. Actual discount point pricing changes daily and varies by lender — 1 discount point does not always equal a fixed rate reduction. Contact your lender for actual buydown pricing.<br><br>
+          PMI estimated at 0.85% annually for conventional. FHA MIP at 0.55% annually. All figures are estimates only and are not a commitment to lend. Actual costs will vary.
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="footer">Jim Hoggan | NMLS# 284263 | One Real Mortgage Corp. | Co. NMLS# 198414 | (801) 244-4261 | james.hoggan@onerealmortgage.com<br>All figures are estimates only and subject to change without notice. Temporary buydown costs are based on the difference between the note rate payment and buydown payment over the buydown period. Permanent buydown costs are estimated and will vary by lender, loan scenario, LTV, credit score, and current market pricing — contact Jim Hoggan for exact permanent buydown pricing. Buydown costs shown are based on loan amount and do not account for lender-specific LLPAs which may increase or decrease costs based on borrower and loan characteristics. Not a commitment to lend. All loans subject to credit approval. Equal Housing Opportunity.</div>
+</div>
+
+</div>
+
+<script>
+function pmt(rate,n,pv){var r=rate/100/12;if(r===0)return pv/n;return pv*r*Math.pow(1+r,n)/(Math.pow(1+r,n)-1)}
+function fmt(n){return '$'+Math.round(n).toLocaleString()}
+function fmtPct(n){return n.toFixed(1)+'%'}
+function getMIP(type,ltv,loan){
+  if(type==='va'||type==='usda')return 0;
+  if(type==='fha')return loan*0.0055/12;
+  if(type==='conv'){
+    if(ltv<=80)return 0;
+    if(ltv<=85)return loan*0.0060/12;
+    if(ltv<=90)return loan*0.0075/12;
+    if(ltv<=95)return loan*0.0090/12;
+    return loan*0.0100/12;
+  }
+  return 0;
+}
+function dtiColor(dti){
+  if(dti<=36)return '#1a7a4a';
+  if(dti<=45)return '#b8760f';
+  return '#c0392b';
+}
+function switchTab(t,el){
+  document.querySelectorAll('.tab').forEach(function(b){b.classList.remove('active')});
+  document.querySelectorAll('.panel').forEach(function(p){p.classList.remove('active')});
+  el.classList.add('active');
+  document.getElementById('tab-'+t).classList.add('active');
+}
+function calcBuyer(){
+  var price=parseFloat(document.getElementById('c-price').value)||0;
+  var down=parseFloat(document.getElementById('c-down').value)||0;
+  var rate=parseFloat(document.getElementById('c-rate').value)||7.125;
+  var type=document.getElementById('c-type').value;
+  var tax=parseFloat(document.getElementById('c-tax').value)||0;
+  var ins=parseFloat(document.getElementById('c-ins').value)||0;
+  var hoa=parseFloat(document.getElementById('c-hoa').value)||0;
+  var income=parseFloat(document.getElementById('c-income').value)||0;
+  var debts=parseFloat(document.getElementById('c-debts').value)||0;
+  var loan=price-down;
+  var ltv=price>0?loan/price*100:0;
+  var pi=pmt(rate,360,loan);
+  var mip=getMIP(type,ltv,loan);
+  var total=pi+mip+tax+ins+hoa;
+  var mo=income/12;
+  var hdti=mo>0?(pi+mip+tax+ins+hoa)/mo*100:0;
+  var tdti=mo>0?(total+debts)/mo*100:0;
+  var maxPay=mo*0.45-debts-tax-ins-hoa-mip;
+  var r=rate/100/12;
+  var maxLoan=maxPay>0?maxPay*(Math.pow(1+r,360)-1)/(r*Math.pow(1+r,360)):0;
+  document.getElementById('c-loan').textContent=fmt(loan);
+  document.getElementById('c-pi').textContent=fmt(pi);
+  document.getElementById('c-ti').textContent=fmt(tax+ins);
+  document.getElementById('c-mip').textContent=mip>0?fmt(mip):'None';
+  document.getElementById('c-hoa-out').textContent=hoa>0?fmt(hoa):'None';
+  document.getElementById('c-total').textContent=fmt(total);
+  document.getElementById('c-ltv').textContent=fmtPct(ltv);
+  document.getElementById('c-maxpurchase').textContent=fmt(maxLoan+down);
+  var hEl=document.getElementById('c-hdti');hEl.textContent=fmtPct(hdti);hEl.style.color=dtiColor(hdti);
+  var tEl=document.getElementById('c-tdti');tEl.textContent=fmtPct(tdti);tEl.style.color=dtiColor(tdti);
+  var rates=[5.5,6.0,6.5,7.0,7.125,7.5,8.0];
+  var html='';
+  rates.forEach(function(r2){
+    var p=pmt(r2,360,loan);var tot=p+mip+tax+ins+hoa;
+    var active=r2===rate;
+    html+='<div class="scenario-row'+(active?' active-row':'')+'"><div class="scenario-label">'+r2.toFixed(3)+'% (est.)'+(active?' <span class="badge badge-navy">current</span>':'')+'</div><div class="scenario-val">'+fmt(tot)+'/mo</div></div>';
+  });
+  document.getElementById('c-scenarios').innerHTML=html;
+}
+function calcAgent(){
+  var price=parseFloat(document.getElementById('r-price').value)||0;
+  var down=parseFloat(document.getElementById('r-down').value)||0;
+  var rate=parseFloat(document.getElementById('r-rate').value)||7.125;
+  var type=document.getElementById('r-type').value;
+  var tax=parseFloat(document.getElementById('r-tax').value)||0;
+  var ins=parseFloat(document.getElementById('r-ins').value)||0;
+  var hoa=parseFloat(document.getElementById('r-hoa').value)||0;
+  var income=parseFloat(document.getElementById('r-income').value)||0;
+  var debts=parseFloat(document.getElementById('r-debts').value)||0;
+  var loan=price-down;
+  var ltv=price>0?loan/price*100:0;
+  var pi=pmt(rate,360,loan);
+  var mip=getMIP(type,ltv,loan);
+  var total=pi+mip+tax+ins+hoa;
+  var mo=income/12;
+  var tdti=mo>0?(total+debts)/mo*100:0;
+  var downPct=price>0?down/price*100:0;
+  document.getElementById('r-loan').textContent=fmt(loan);
+  document.getElementById('r-pi').textContent=fmt(pi);
+  document.getElementById('r-ti').textContent=fmt(tax+ins);
+  document.getElementById('r-mip').textContent=mip>0?fmt(mip):'None';
+  document.getElementById('r-hoa-out').textContent=hoa>0?fmt(hoa):'None';
+  document.getElementById('r-total').textContent=fmt(total);
+  document.getElementById('r-downpct').textContent=fmtPct(downPct);
+  var dEl=document.getElementById('r-dti');
+  dEl.textContent=mo>0?fmtPct(tdti):'--';
+  if(mo>0)dEl.style.color=dtiColor(tdti);
+  var qEl=document.getElementById('r-qual');
+  if(tdti<=45&&ltv<=97){qEl.textContent='Est. qualifies';qEl.style.color='#1a7a4a';}
+  else if(tdti<=50){qEl.textContent='Borderline';qEl.style.color='#b8760f';}
+  else{qEl.textContent='DTI concern';qEl.style.color='#c0392b';}
+  var prices=[price*0.9,price*0.95,price,price*1.05,price*1.1];
+  var html='';
+  prices.forEach(function(p){
+    var l=p-down;var pi2=pmt(rate,360,l);
+    var mip2=getMIP(type,p>0?l/p*100:0,l);
+    var tot=pi2+mip2+tax+ins+hoa;
+    var active=Math.round(p)===Math.round(price);
+    html+='<div class="scenario-row'+(active?' active-row':'')+'"><div class="scenario-label">'+fmt(p)+(active?' <span class="badge badge-navy">this home</span>':'')+'</div><div class="scenario-val">'+fmt(tot)+'/mo (est.)</div></div>';
+  });
+  document.getElementById('r-scenarios').innerHTML=html;
+}
+function calcLO(){
+  var loan=parseFloat(document.getElementById('l-loan').value)||0;
+  var rate=parseFloat(document.getElementById('l-rate').value)||7.125;
+  var term=parseInt(document.getElementById('l-term').value)||30;
+  var type=document.getElementById('l-type').value;
+  var tax=parseFloat(document.getElementById('l-tax').value)||0;
+  var ins=parseFloat(document.getElementById('l-ins').value)||0;
+  var hoa=parseFloat(document.getElementById('l-hoa').value)||0;
+  var income=parseFloat(document.getElementById('l-income').value)||0;
+  var debts=parseFloat(document.getElementById('l-debts').value)||0;
+  var ltv=95;
+  var pi=pmt(rate,term*12,loan);
+  var mip=getMIP(type,ltv,loan);
+  var total=pi+mip+tax+ins+hoa;
+  var hdti=income>0?(pi+mip+tax+ins+hoa)/income*100:0;
+  var tdti=income>0?(total+debts)/income*100:0;
+  var maxPay=income*0.45-debts-tax-ins-hoa-mip;
+  var r=rate/100/12;var n=term*12;
+  var maxLoan=maxPay>0?maxPay*(Math.pow(1+r,n)-1)/(r*Math.pow(1+r,n)):0;
+  document.getElementById('l-pi').textContent=fmt(pi);
+  document.getElementById('l-total').textContent=fmt(total);
+  document.getElementById('l-mip').textContent=mip>0?fmt(mip):'None';
+  document.getElementById('l-maxloan').textContent=fmt(maxLoan);
+  var hEl=document.getElementById('l-hdti');hEl.textContent=fmtPct(hdti);hEl.style.color=dtiColor(hdti);
+  var tEl=document.getElementById('l-tdti');tEl.textContent=fmtPct(tdti);tEl.style.color=dtiColor(tdti);
+  var rates=[5.5,6.0,6.5,6.875,7.0,7.125,7.5,8.0];
+  var html='<table class="buydown-table"><thead><tr><th>Rate</th><th>Est. P&I</th><th>Est. PITIA</th><th>Est. housing DTI</th><th>Est. total DTI</th></tr></thead><tbody>';
+  rates.forEach(function(r2){
+    var p=pmt(r2,n,loan);var tot=p+mip+tax+ins+hoa;
+    var h=income>0?(p+mip+tax+ins+hoa)/income*100:0;
+    var td2=income>0?(tot+debts)/income*100:0;
+    var active=r2===rate;
+    html+='<tr'+(active?' class="hl"':'')+'><td>'+r2.toFixed(3)+'%'+(active?' <span class="badge badge-gold">current</span>':'')+'</td><td>'+fmt(p)+'</td><td>'+fmt(tot)+'</td><td style="color:'+dtiColor(h)+'">'+fmtPct(h)+'</td><td style="color:'+dtiColor(td2)+'">'+fmtPct(td2)+'</td></tr>';
+  });
+  html+='</tbody></table>';
+  document.getElementById('l-matrix').innerHTML=html;
+}
+function calcBuilder(){
+  var price=parseFloat(document.getElementById('b-price').value)||0;
+  var homes=parseInt(document.getElementById('b-homes').value)||1;
+  var downPct=parseFloat(document.getElementById('b-down').value)||5;
+  var mktRate=parseFloat(document.getElementById('b-rate').value)||7.125;
+  var type=document.getElementById('b-type').value;
+  var targetRate=parseFloat(document.getElementById('b-target').value)||5.125;
+  var tax=parseFloat(document.getElementById('b-tax').value)||0;
+  var ins=parseFloat(document.getElementById('b-ins').value)||0;
+  var hoa=parseFloat(document.getElementById('b-hoa').value)||0;
+  var down=price*downPct/100;
+  var loan=price-down;
+  var ltv=100-downPct;
+  var mip=getMIP(type,ltv,loan);
+  var mktPmt=pmt(mktRate,360,loan);
+  var mktTotal=mktPmt+mip+tax+ins+hoa;
+  document.getElementById('b-loan').textContent=fmt(loan);
+  document.getElementById('b-mktpmt').textContent=fmt(mktTotal)+'/mo';
+  document.getElementById('b-mktall').textContent=fmt(mktTotal*homes)+'/mo';
+  var pmt21y1=pmt(mktRate-2,360,loan);
+  var pmt21y2=pmt(mktRate-1,360,loan);
+  var cost21=(mktPmt-pmt21y1)*12+(mktPmt-pmt21y2)*12;
+  var sav21=mktPmt-pmt21y1;
+  var pmt11y1=pmt(mktRate-1,360,loan);
+  var cost11=(mktPmt-pmt11y1)*12;
+  var sav11=mktPmt-pmt11y1;
+  var pmtPerm=pmt(targetRate,360,loan);
+  var permCostPct=parseFloat(document.getElementById('b-permcost').value)||3.0;
+  var permCost=loan*permCostPct/100;
+  var savPerm=mktPmt-pmtPerm;
+  var html='';
+  html+='<tr><td><strong>2-1 buydown</strong><br><span style="font-size:10px;color:#888">Yr1: '+(mktRate-2).toFixed(3)+'% / Yr2: '+(mktRate-1).toFixed(3)+'% / Yr3+: '+mktRate.toFixed(3)+'%</span></td><td>'+(mktRate-2).toFixed(3)+'%</td><td>'+fmt(pmt21y1+mip+tax+ins+hoa)+'/mo</td><td style="color:#1a7a4a;font-weight:600">'+fmt(sav21)+'/mo</td><td class="hl"><strong>'+fmt(cost21)+'</strong></td><td style="color:#1a7a4a"><strong>'+fmt(cost21*homes)+'</strong></td></tr>';
+  html+='<tr><td><strong>1-0 buydown</strong><br><span style="font-size:10px;color:#888">Yr1: '+(mktRate-1).toFixed(3)+'% / Yr2+: '+mktRate.toFixed(3)+'%</span></td><td>'+(mktRate-1).toFixed(3)+'%</td><td>'+fmt(pmt11y1+mip+tax+ins+hoa)+'/mo</td><td>'+fmt(sav11)+'/mo</td><td class="hl"><strong>'+fmt(cost11)+'</strong></td><td>'+fmt(cost11*homes)+'</td></tr>';
+  html+='<tr><td><strong>Permanent buydown*</strong><br><span style="font-size:10px;color:#888">To '+targetRate.toFixed(3)+'% for life of loan — estimated cost</span></td><td>'+targetRate.toFixed(3)+'%</td><td>'+fmt(pmtPerm+mip+tax+ins+hoa)+'/mo</td><td>'+fmt(savPerm)+'/mo</td><td class="hl" style="color:#c0392b"><strong>~'+fmt(permCost)+'*</strong></td><td style="color:#c0392b"><strong>~'+fmt(permCost*homes)+'*</strong></td></tr>';
+  document.getElementById('b-table').innerHTML=html;
+}
+calcBuyer();calcAgent();calcLO();calcBuilder();
+</script>
+<!-- ORM-UNIVERSAL-FOOTER -->
+<div style="max-width:1100px;margin:0 auto;padding:28px 20px 20px;border-top:1px solid rgba(201,168,76,0.35);"><p style="font-size:0.72rem;line-height:1.6;color:#9a9a9a;text-align:left;margin:0;">Provided for informational purposes only. This is not a commitment to lend. Not all applicants will qualify. One Real Mortgage Corp., NMLS ID #198414, 400 Renaissance Center, Suite 2600, Office 2620, Detroit, MI, 48243, Phone: 732-549-7001, <a href="https://onerealmortgage.com/" target="_blank" rel="noopener" style="color:#b9b9b9;">https://onerealmortgage.com/</a>, is licensed in: AL; AZ &ndash; Mortgage Broker License #0937850; CA - Loans made or arranged pursuant to a California Financing Law License (licensed by the Department of Financial Protection and Innovation); CO; CT; DE; DC; FL; GA; HI; IA; IL; KS Mortgage Company License #MC.0027690; LA; MD; MI; MN; MS; NJ &ndash; licensed by the N.J. Department of Banking and Insurance; NC; OH; OR; PA; SC; TN; TX &ndash; Mortgage Company License (a residential mortgage loan company); UT; VA Broker License #MC-6641; WA &ndash; Consumer Loan Company License #CL198414; and WI Mortgage Broker License #198414BR. One Real Mortgage will not make any mortgage loan commitments or fund any mortgage loans under this offer. One Real Mortgage is a mortgage broker that arranges loans with third-party providers, and a consumer&rsquo;s loan is subject to final approval by One Real Mortgage&rsquo;s third-party lenders to which One Real Mortgage brokers loans. In certain circumstances, One Real Mortgage may be unable to identify a lender and/or loan suitable for a consumer. The lender reserves the right to cancel, withdraw, or deny a consumer&rsquo;s application, not One Real Mortgage. One Real Mortgage is an affiliate of companies owned by The Real Brokerage Inc. For more information about One Real Mortgage licensing and its affiliation with the Real companies, please visit <a href="https://www.onerealmortgage.com/affiliated-businesses" target="_blank" rel="noopener" style="color:#b9b9b9;">https://www.onerealmortgage.com/affiliated-businesses</a>. One Real Mortgage does not discriminate on any prohibited basis. Equal Housing Opportunity. <img src="equal-housing-opportunity.png" alt="Equal Housing Opportunity" width="30" style="vertical-align:middle;margin-left:6px;opacity:0.8;"></p></div>
+</body>
+</html>
